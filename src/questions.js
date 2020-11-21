@@ -102,10 +102,17 @@ export const questions = [
     line_name: "m7"
   },
   {
-    station_to_guess: "Invalides",
-    hint: "I_v______",
-    left_stations: ["École militaire", "La Tour-Maubourg"],
-    right_stations: ["Concorde", "Madeileine"],
-    line_name: "m8"
+    station_to_guess: "Odéon",
+    hint: "O_é__",
+    left_stations: ["Cité", "Saint-Michel"],
+    right_stations: ["Saint-Germain-des-Prés", "Saint-Suplice"],
+    line_name: "m4"
+  },
+  {
+    station_to_guess: "Grand Boulevards",
+    hint: "G____ B_________",
+    left_stations: ["Chaussé d'Antin - La Fayette", "Richelieu Drouott"],
+    right_stations: ["Bonne nouvelle", "Strasbourg - Saint-Denis"],
+    line_name: "m9"
   }
 ];
