@@ -14,7 +14,8 @@ export function PutStationOnLine({
   // left_stations and right_stations distinct
 
   const [value, setValue] = React.useState("");
-  const [showSuccess, setShowSuccess] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const [giveUp, setGiveUp] = React.useState(false);
   const [showHint, setShowHint] = React.useState(false);
   const [almost, setAlmost] = React.useState(false);
 
@@ -23,41 +24,50 @@ export function PutStationOnLine({
     .map(c => (c === " " ? " " : "_"))
     .join("");
   function handleInput(input) {
-    if (showSuccess) {
+    if (giveUp || success) {
       return;
     }
+    const norm_input = input
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLocaleLowerCase();
+    const norm_station_to_guess = station_to_guess
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLocaleLowerCase();
     const similarity = stringSimilarity.compareTwoStrings(
-      input.toLocaleLowerCase(),
-      station_to_guess.toLocaleLowerCase()
+      norm_input,
+      norm_station_to_guess
     );
     if (similarity > 0.7 && similarity < 1) {
       setAlmost(true);
     } else {
       setAlmost(false);
     }
-    if (input.toLocaleLowerCase() === station_to_guess.toLocaleLowerCase()) {
-      setShowSuccess(true);
+    if (norm_input === norm_station_to_guess) {
+      setSuccess(true);
     }
     setValue(input);
   }
   function reset() {
     setAlmost(false);
-    setShowSuccess(false);
+    setSuccess(false);
+    setGiveUp(false);
     setShowHint(false);
     setValue("");
   }
   function handleGiveUp() {
-    reset();
-    on_correct(0);
+    setGiveUp(true);
+    setValue(station_to_guess);
   }
   function handleNewt() {
     reset();
-    on_correct(showHint ? 0.5 : 1);
+    on_correct(giveUp ? 0 : showHint ? 0.5 : 1);
   }
   return (
     <Keyboard
       onEnter={
-        showSuccess
+        success
           ? handleNewt
           : () => {
               console.log("click enter");
@@ -92,7 +102,13 @@ export function PutStationOnLine({
           <FormField
             label={
               <Text size="small" tag="p" style={{ height: "25px" }}>
-                {almost ? "Presque..." : showSuccess ? "Correct !" : ""}
+                {giveUp
+                  ? "C'était"
+                  : almost
+                  ? "Presque..."
+                  : success
+                  ? "Correct !"
+                  : ""}
               </Text>
             }
             info={showHint ? hint : place_holder}
@@ -108,36 +124,47 @@ export function PutStationOnLine({
                 fontFamily: "monospace"
               }}
               value={value}
-              // disabled={showSuccess}
               onChange={event => handleInput(event.target.value)}
             />
           </FormField>
         </Box>
-        {!showSuccess && !showHint && (
-          <Box pad="medium">
-            <Button
-              plain
-              color="neutral-1"
-              icon={<Info color="neutral-1" />}
-              label="Afficher l'indice"
-              onClick={setShowHint.bind(undefined, true)}
-            />
-          </Box>
-        )}
-        {!showSuccess && showHint && (
-          <Box pad="medium">
-            <FormField error>
+        {!success && !showHint && (
+          <>
+            <Box pad="medium">
               <Button
-                color="red"
-                plain
-                icon={<Alert color="status-critical" />}
-                label="Abandonner cette question"
-                onClick={handleGiveUp}
+                color="status-warning"
+                icon={<Info color="status-warning" />}
+                label="Afficher l'indice"
+                onClick={setShowHint.bind(undefined, true)}
               />
-            </FormField>
-          </Box>
+            </Box>
+            <Box justify="center">
+              <Text tag="p" color="status-warning" textAlign="center">
+                Mais cette question ne rapportera que 0.5 au lieu de 1 point
+              </Text>
+            </Box>
+          </>
         )}
-        {showSuccess && (
+        {!success && !giveUp && showHint && (
+          <>
+            <Box pad="medium">
+              <FormField error>
+                <Button
+                  color="status-critical"
+                  icon={<Alert color="status-critical" />}
+                  label="Abandonner cette question"
+                  onClick={handleGiveUp}
+                />
+              </FormField>
+            </Box>
+            <Box justify="center">
+              <Text tag="p" color="status-critical" textAlign="center">
+                Mais cette question ne rapportera pas de points.
+              </Text>
+            </Box>
+          </>
+        )}
+        {(success || giveUp) && (
           <Box pad="medium">
             <FormField>
               <Button
