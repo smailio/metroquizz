@@ -63,7 +63,7 @@ function App() {
                   }}
                 />
               ) : (
-                <GameOver />
+                <GameOver score={score} />
               )}
             </Box>
           </Box>

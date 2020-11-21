@@ -45,7 +45,7 @@ import {
   WorkplaceIcon
 } from "react-share";
 
-const GameOver = () => (
+const GameOver = ({ score }) => (
   <Box
     direction="column"
     flex
@@ -57,19 +57,25 @@ const GameOver = () => (
     pad="medium"
     height={"large"}
   >
-    <Box background="accent-4">
-      <Heading margin="medium" level={3}>
-        Eh ben...
-      </Heading>
-    </Box>
     <Box background="neutral-2">
       <Heading margin="medium" level={3}>
         Félécitation, c'était la derniere question.
       </Heading>
     </Box>
+    <Box background="accent-4">
+      <Heading margin="medium" level={3}>
+        Vous avez obtenu {score} points
+      </Heading>
+    </Box>
     <Box background="neutral-1">
       <Heading margin="medium" level={3}>
-        Vous avez bien rentabilisé votre pass navigo !
+        {score > 11
+          ? "Beau score! Vous vivez quasiment dans le metro!"
+          : score > 6
+          ? "Beau score ! Vous avez bien rentabilisé votre pass navigo !"
+          : score > 3
+          ? "Pas mal pour un touriste !"
+          : "Clairement vous préférez la marche ou le Uber."}
       </Heading>
     </Box>
     <Box direction="row" justify="center">
