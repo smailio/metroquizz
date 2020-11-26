@@ -1,33 +1,8 @@
 
-## title
+## Quizz about Paris Metro
 
-**bold**
+**try it [https://metroquizz.web.app/](https://metroquizz.web.app/)**
 
+This was done whith React, grommet and is hosted on Firebase. 
 
-`script`
-
-
-Quizz component 
-
-Host guess component, 
-
-Guess Station Component
-
-will the component be responsible of checking the correct answer ? 
-
-will  ? 
-
-Guess line 
-
-What the user will do ? 
-
-- submit a right answer in text field  
-    - say congrates
-    - save score
-    - show next question 
-    
-- sumbit wrong answer in text field
-    - allow to try again ? 
-    - show hint ? yes
-    - timer ? no
-    - 
+The CSS for the metro was writter by [@waarissyb](https://github.com/waarissyb)
