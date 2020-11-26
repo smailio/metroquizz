@@ -11,8 +11,6 @@ export function PutStationOnLine({
   hint,
   on_correct
 }) {
-  // left_stations and right_stations distinct
-
   const [value, setValue] = React.useState("");
   const [success, setSuccess] = React.useState(false);
   const [giveUp, setGiveUp] = React.useState(false);
@@ -30,10 +28,12 @@ export function PutStationOnLine({
     const norm_input = input
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]/gi, "")
       .toLocaleLowerCase();
     const norm_station_to_guess = station_to_guess
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]/gi, "")
       .toLocaleLowerCase();
     const similarity = stringSimilarity.compareTwoStrings(
       norm_input,
